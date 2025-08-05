@@ -9,14 +9,6 @@
 }
 
 
-.light-mode {
-  --background-color: #ffffff;
-  --text-color: #000000;
-  --button-bg-color: #f0f0f0;
-  --button-text-color: #000000;
-  --button-border-color: #cccccc;
-  --link-color: #1a0dab;
-}
 .dark-mode {
   --background-color: #121212;
   --text-color: #ffffff;
@@ -24,6 +16,14 @@
   --button-text-color: #ffffff;
   --button-border-color: #333333;
   --link-color: #bb86fc;
+}
+.light-mode {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --button-bg-color: #f0f0f0;
+  --button-text-color: #000000;
+  --button-border-color: #cccccc;
+  --link-color: #1a0dab;
 }
 .galaxy-theme {
   --background-color: #0b0033;
