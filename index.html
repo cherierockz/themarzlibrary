@@ -99,37 +99,6 @@
     <div id="ad-zone"></div>
   </div>
   <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      fetch('filesgx/')
-        .then(res => res.text())
-        .then(html => {
-          const div = document.createElement('div');
-          div.innerHTML = html;
-          const links = Array.from(div.querySelectorAll('a'))
-            .filter(a =>
-              a.getAttribute('href') &&
-              a.getAttribute('href') !== '../'
-            );
-          const gameCount = links.length;
-          const counterElement = document.getElementById("game-home");
-          let current = 0;
-          const counter = setInterval(() => {
-            if (current < gameCount) {
-              current++;
-              counterElement.textContent = `Currently the home to ${current} Game${current === 1 ? '' : 's'}!`;
-            } else {
-              clearInterval(counter);
-            }
-          }, 40);
-          if (gameCount === 0) {
-            counterElement.textContent = "Home to 0 Games!";
-          }
-        })
-        .catch(() => {
-          document.getElementById("game-home").textContent = "Home to 0 Games!";
-        });
-    });
-
     const body = document.body;
     const themeClasses = [
       'light-mode','dark-mode','galaxy-theme','red-nebula-theme',
