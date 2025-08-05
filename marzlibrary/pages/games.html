@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Marz's Games</title>
+  <link rel="stylesheet" href="../css/games.css">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Press Start 2P', monospace, Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <h1>Marz's Games</h1>
+
+  <input type="text" id="gameSearch" placeholder="Search for a game...">
+  <p class="game-counter" id="gameCount">0 games hosted</p>
+
+  <button class="myButton" id="randomGameBtn">Random Game</button>
+  <br>
+
+  <div class="game-grid" id="gameList"></div>
+
+  <button class="myButton" onclick="location.href='../index.html'">Back to Home</button>
+
+  <script>
+    
+    const games = [
+      { url: "/filesgx/osu!.html", img: "/images/gx/osu.png", title: "Osu" },
+      { url: "/filesgx/ddlc.html", img: "/images/gx/ddlc.jpg", title: "Doki Doki Literature Club" },
+      { url: "/filesgx/OMORI.html", img: "/images/gx/OMORI.png", title: "Omori" },
+      { url: "/filesgx/co09.html", img: "/images/gx/co09.png", title: "Class of '09" },
+      { url: "/filesgx/Deltarune.html", img: "/images/gx/deltarune.png", title: "Deltarune" },
+      { url: "/filesgx/snake-remake-html-main/natlol/index.html", img: "/images/gx/ekkeLl.png", title: "Snake" },
+      { url: "/filesgx/A Bite at Freddy's.html", img: "/images/gx/freddy.png", title: "A Bite at Freddy's" },
+      { url: "/filesgx/Kindergarten.html", img: "/images/gx/kindergarten.png", title: "Kindergarten" } ,
+      { url: "/filesgx/Celeste PICO.html", img: "/images/gx/celeste.png", title: "Celeste" } ,
+      { url: "/filesgx/Cookie Clicker.html", img: "/images/gx/cookieclicker.png", title: "Cookie Clicker" } ,
+   
+    ];
+
+
+    (function() {
+      const themeClasses = [
+        'light-mode', 'dark-mode', 'galaxy-theme', 'red-nebula-theme',
+        'blue-nebula-theme', 'bubblegum-theme', 'forest-theme', 'citrus-theme',
+        'coffee-theme', 'pastel-theme', 'rainbow-theme'
+      ];
+      const body = document.body;
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme && themeClasses.includes(savedTheme)) {
+        body.classList.add(savedTheme);
+      } else {
+        body.classList.add('light-mode');
+      }
+    })();
+
+ 
+    function renderGameGrid(gameArray) {
+      const grid = document.getElementById('gameList');
+      grid.innerHTML = '';
+      gameArray.forEach(game => {
+        const a = document.createElement('a');
+        a.href = game.url;
+        const img = document.createElement('img');
+        img.className = 'imagebutton';
+        img.src = game.img;
+        img.alt = game.title;
+        a.appendChild(img);
+        grid.appendChild(a);
+      });
+    }
+
+
+    function goRandomGame() {
+      if (games.length === 0) return;
+      const random = games[Math.floor(Math.random() * games.length)];
+      window.location.href = random.url;
+    }
+
+   
+    function filterGames(query) {
+      return games.filter(game =>
+        game.title.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+
+
+    function animateCounter(count) {
+      const counterElement = document.getElementById("gameCount");
+      let current = 0;
+      const counter = setInterval(() => {
+        if (current < count) {
+          current++;
+          const label = current === 1 ? "game hosted" : "games hosted";
+          counterElement.textContent = `${current} ${label}`;
+        } else {
+          clearInterval(counter);
+        }
+      }, 40);
+      if (count === 0) counterElement.textContent = "0 games hosted";
+    }
+
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderGameGrid(games);
+      animateCounter(games.length);
+
+     
+      const searchInput = document.getElementById("gameSearch");
+      searchInput.addEventListener("input", () => {
+        const filtered = filterGames(searchInput.value);
+        renderGameGrid(filtered);
+        document.getElementById("gameCount").textContent =
+          `${filtered.length} game${filtered.length === 1 ? "" : "s"} hosted`;
+      });
+
+    
+      document.getElementById('randomGameBtn').onclick = goRandomGame;
+    });
+  </script>
+  <script type="text/javascript">
+    atOptions = {
+        'key' : '9333ee430933a9c700a5a1cb09940829',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+    };
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/9333ee430933a9c700a5a1cb09940829/invoke.js"></script>
+</body>
+</html>
