@@ -106,6 +106,14 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+.szvy-central {
+  --background-color: #1e1e2c; 
+  --text-color: #e6e6f0; 
+  --button-bg-color: #2a2a42; 
+  --button-text-color: #e6e6f0; 
+  --button-border-color: #7a7a9e; 
+  --link-color: #9d9dc9;
+}
 
 
 body {
