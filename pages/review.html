@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Leave a Review</title>
+  <link rel="stylesheet" href="../css/index.css">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    /* Your theming and button styles here! (You can move all your big CSS block here if you want) */
+    /* ...PASTE YOUR CSS FROM ABOVE HERE OR LEAVE AS EXTERNAL... */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 style="font-family: 'Press Start 2P', monospace;">Leave a Review</h2>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSff9PCugn9JRJpDLt8DMg_kQPgjAbiTecUQi9GZUOQ3vrEPeg/viewform?embedded=true"
+            width="600" height="820" frameborder="0" marginheight="0" marginwidth="0"
+            style="background:#fff4fa;border-radius:12px;box-shadow:0 2px 16px #e6a4be77;max-width:97vw;">
+      Loading…
+    </iframe>
+    <div class="button-row">
+      <a href="../index.html" class="myButton">Home</a>
+      <a href="reviewsheet.html" class="myButton">Reviews</a>
+    </div>
+  </div>
+  <script>
+    // Theme handling (keep as is)
+    const body = document.body;
+    const themeClasses = [
+      'light-mode','dark-mode','galaxy-theme','red-nebula-theme',
+      'blue-nebula-theme','bubblegum-theme','forest-theme','citrus-theme',
+      'coffee-theme','pastel-theme','rainbow-theme', 'szvy-central'
+    ];
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme && themeClasses.includes(savedTheme)) {
+      body.classList.add(savedTheme);
+    } else {
+      body.classList.add('light-mode');
+    }
+  </script>
+</body>
+</html>

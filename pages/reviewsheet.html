@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Reviews</title>
+  <link rel="stylesheet" href="../css/index.css">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background-color: #fff4fa;
+      --text-color: #222;
+      --button-bg-color: #ff6392;
+      --button-text-color: #fff;
+      --button-border-color: #ff98c2;
+      --link-color: #ff6392;
+    }
+    body {
+      font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+      background: var(--background-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .container {
+      max-width: 900px;
+      width: 98vw;
+      margin: 30px auto 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .carousel-container {
+      width: 100%;
+      max-width: 800px;
+      min-height: 170px;
+      background: #ffe6f0;
+      border-radius: 16px;
+      box-shadow: 0 4px 22px #e6a4be39;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 24px 16px 18px 16px;
+    }
+    .carousel-review {
+      text-align: center;
+      font-size: 1.06em;
+      min-height: 70px;
+      transition: opacity .5s;
+      color: #222;
+      margin-bottom: 12px;
+    }
+    .carousel-name {
+      font-size: .99em;
+      color: #b45a93;
+      margin-top: 8px;
+      margin-bottom: 3px;
+      font-weight: bold;
+    }
+    .carousel-rating {
+      font-size: 1.25em;
+      color: #ff6392;
+      margin-top: 2px;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      pointer-events: none;
+    }
+    .carousel-btn {
+      background: var(--button-bg-color);
+      color: var(--button-text-color);
+      border: none;
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      font-size: 1.6em;
+      cursor: pointer;
+      pointer-events: all;
+      opacity: .85;
+      transition: background .16s, transform .1s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .carousel-btn:hover { background: var(--link-color); transform: scale(1.11);}
+    .overall-rating {
+      font-size: 1.15em;
+      margin-bottom: 16px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      background: #ffe6f0;
+      color: #d13a7a;
+      padding: 12px 18px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px #ffbad650;
+    }
+    .reviews-table {
+      width: 100%;
+      max-width: 880px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 22px #f7badc2c;
+      margin-bottom: 32px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1em;
+    }
+    th, td {
+      padding: 10px 8px;
+      text-align: left;
+      border-bottom: 1px solid #fde2ef;
+      font-family: inherit;
+    }
+    th {
+      background: #ffe6f0;
+      color: #b45a93;
+      font-size: 1em;
+      letter-spacing: .5px;
+    }
+    td {
+      color: #222;
+      word-break: break-word;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin: 28px 0 16px 0;
+      justify-content: center;
+      width: 100%;
+    }
+    .myButton {
+      font-family: 'Press Start 2P', monospace, Arial, sans-serif !important;
+      font-size: 16px;
+      color: var(--button-text-color);
+      background: var(--button-bg-color);
+      border: 2px solid var(--button-border-color);
+      padding: 12px 24px;
+      border-radius: 6px;
+      box-shadow: 0 0 8px var(--button-border-color, #ffb6c1);
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .myButton:hover {
+      background: var(--link-color);
+      color: var(--background-color);
+      box-shadow: 0 0 16px var(--button-border-color, #ffb6c1);
+      transform: scale(1.06);
+      border-color: var(--link-color);
+    }
+    @media (max-width: 850px) {
+      .container, .carousel-container, .reviews-table { max-width: 99vw; }
+      .reviews-table { font-size: .95em;}
+    }
+    @media (max-width: 600px) {
+      th, td { font-size: .94em; padding: 6px 2px; }
+      .carousel-container { padding: 13px 2vw; }
+      .overall-rating { font-size: 1em;}
+      .button-row { gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 style="font-family: 'Press Start 2P', monospace;">What People Are Saying</h2>
+    <div class="overall-rating" id="overallRating">Overall rating: ...</div>
+    <div class="carousel-container" id="carouselContainer">
+      <div class="carousel-review" id="carouselReview">Loading reviews...</div>
+      <div class="carousel-name" id="carouselName"></div>
+      <div class="carousel-rating" id="carouselRating"></div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" id="prevBtn">&#8592;</button>
+        <button class="carousel-btn" id="nextBtn">&#8594;</button>
+      </div>
+    </div>
+    <div class="reviews-table" id="reviewsTableContainer">
+      <!-- The reviews table will be inserted here -->
+    </div>
+    <div class="button-row">
+      <a href="../index.html" class="myButton">Home</a>
+      <a href="review.html" class="myButton">Leave a Review</a>
+    </div>
+  </div>
+  <script>
+    // ---- THEME HANDLING (same as your other pages) ----
+    const body = document.body;
+    const themeClasses = [
+      'light-mode','dark-mode','galaxy-theme','red-nebula-theme',
+      'blue-nebula-theme','bubblegum-theme','forest-theme','citrus-theme',
+      'coffee-theme','pastel-theme','rainbow-theme', 'szvy-central'
+    ];
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme && themeClasses.includes(savedTheme)) {
+      body.classList.add(savedTheme);
+    } else {
+      body.classList.add('light-mode');
+    }
+
+    // ---- GOOGLE SHEET FETCHING AND DISPLAY ----
+
+    // Replace with YOUR published Google Sheet "CSV" link!
+    // Open your sheet, File > Share > Publish to web > CSV format for "Form Responses 1"
+    // Should look like: https://docs.google.com/spreadsheets/d/e/xxx/pub?output=csv
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcGDZjwMX72iGtW2NnTGFpor5lsfWzHtZIfdod0-nBOrb0dEpw_kt75orr6NHYBgd_QMv0om8tzSfg/pub?output=csv";
+
+    // If you want to test with your own, replace above URL after publishing!
+
+    async function fetchReviews() {
+      try {
+        const response = await fetch(sheetUrl);
+        const csvText = await response.text();
+        // Parse CSV (simple, no 3rd-party libs needed)
+        const rows = csvText.trim().split('\n').map(row =>
+          row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, ''))
+        );
+        const headers = rows[0];
+        const reviews = rows.slice(1).map(row => {
+          let obj = {};
+          headers.forEach((h, i) => obj[h] = row[i]);
+          return obj;
+        });
+        return reviews;
+      } catch (e) {
+        document.getElementById('carouselReview').textContent = "Couldn't load reviews!";
+        return [];
+      }
+    }
+
+    // Shuffle array (for random carousel)
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function getStarRating(rating) {
+      const n = parseInt(rating, 10) || 0;
+      return '★'.repeat(n) + '☆'.repeat(5 - n);
+    }
+
+    // Carousel logic
+    let carouselReviews = [];
+    let carouselIndex = 0;
+    function showCarouselReview(idx) {
+      if (!carouselReviews.length) return;
+      const review = carouselReviews[idx];
+      document.getElementById('carouselReview').textContent = `"${review['Short Review'] || review['Review'] || review['review'] || ''}"`;
+      document.getElementById('carouselName').textContent = review['Name'] ? `– ${review['Name']}` : '';
+      document.getElementById('carouselRating').textContent = review['Rating'] ? getStarRating(review['Rating']) : '';
+    }
+    function nextCarousel() {
+      carouselIndex = (carouselIndex + 1) % carouselReviews.length;
+      showCarouselReview(carouselIndex);
+    }
+    function prevCarousel() {
+      carouselIndex = (carouselIndex - 1 + carouselReviews.length) % carouselReviews.length;
+      showCarouselReview(carouselIndex);
+    }
+    document.getElementById('nextBtn').onclick = nextCarousel;
+    document.getElementById('prevBtn').onclick = prevCarousel;
+
+    // Render reviews table
+    function renderReviewsTable(allReviews) {
+      const headers = Object.keys(allReviews[0] || {Name:"", Rating:"", Review:""});
+      let html = `<table><thead><tr>`;
+      headers.forEach(h => {
+        if (h.toLowerCase().includes("timestamp")) return;
+        html += `<th>${h}</th>`;
+      });
+      html += `</tr></thead><tbody>`;
+      allReviews.forEach(r => {
+        html += "<tr>";
+        headers.forEach(h => {
+          if (h.toLowerCase().includes("timestamp")) return;
+          let val = r[h] || "";
+          if (h.toLowerCase() === "rating") val = getStarRating(val);
+          html += `<td>${val}</td>`;
+        });
+        html += "</tr>";
+      });
+      html += "</tbody></table>";
+      document.getElementById('reviewsTableContainer').innerHTML = html;
+    }
+
+    // Render overall rating
+    function renderOverallRating(reviews) {
+      const ratings = reviews
+        .map(r => parseInt(r['Rating'] || r['rating'] || r['Score'] || 0, 10))
+        .filter(x => !isNaN(x) && x > 0 && x <= 5);
+      if (ratings.length === 0) {
+        document.getElementById('overallRating').textContent = "No ratings yet!";
+        return;
+      }
+      const avg = ratings.reduce((a,b) => a+b, 0) / ratings.length;
+      document.getElementById('overallRating').textContent =
+        `Overall rating: ${avg.toFixed(2)} / 5 (${getStarRating(Math.round(avg))}) — ${ratings.length} review${ratings.length===1?"":"s"}`;
+    }
+
+    // Main: fetch and render all
+    fetchReviews().then(reviews => {
+      if (!reviews.length) return;
+      // Carousel
+      carouselReviews = shuffle(reviews.slice()).slice(0, 5);
+      carouselIndex = 0;
+      showCarouselReview(carouselIndex);
+      setInterval(nextCarousel, 8000); // auto-slide every 8 seconds
+
+      // Table
+      renderReviewsTable(reviews);
+
+      // Overall
+      renderOverallRating(reviews);
+    });
+
+  </script>
+</body>
+</html>
