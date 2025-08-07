@@ -47,6 +47,7 @@
       position: relative;
       overflow: hidden;
       padding: 24px 16px 18px 16px;
+      display: hidden;
     }
     .carousel-review {
       text-align: center;
@@ -55,6 +56,7 @@
       transition: opacity .5s;
       color: #222;
       margin-bottom: 12px;
+      display: hidden;
     }
     .carousel-name {
       font-size: .99em;
@@ -62,6 +64,7 @@
       margin-top: 8px;
       margin-bottom: 3px;
       font-weight: bold;
+      display: hidden;
     }
     .carousel-rating {
       font-size: 1.25em;
@@ -69,6 +72,7 @@
       margin-top: 2px;
       margin-bottom: 8px;
       letter-spacing: 2px;
+      display: hidden;
     }
     .carousel-nav {
       position: absolute;
@@ -78,6 +82,7 @@
       justify-content: space-between;
       width: 100%;
       pointer-events: none;
+      display: hidden;
     }
     .carousel-btn {
       background: var(--button-bg-color);
@@ -91,6 +96,7 @@
       opacity: .85;
       transition: background .16s, transform .1s;
       display: flex; align-items: center; justify-content: center;
+      display: hidden;
     }
     .carousel-btn:hover { background: var(--link-color); transform: scale(1.11);}
     .overall-rating {
@@ -103,6 +109,7 @@
       padding: 12px 18px;
       border-radius: 8px;
       box-shadow: 0 2px 10px #ffbad650;
+      display: hidden;
     }
     .reviews-table {
       width: 100%;
@@ -173,6 +180,9 @@
       .overall-rating { font-size: 1em;}
       .button-row { gap: 10px; }
     }
+    #carouselContainer {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -220,26 +230,83 @@
 
     // If you want to test with your own, replace above URL after publishing!
 
+    function calculateSimpleAverageFromCSV(csvText) {
+  const lines = csvText.trim().split('\n');
+  const ratingLines = lines.slice(1); // skip header
+  const ratings = ratingLines.map(line => {
+    const parts = line.trim().split(',');
+    const lastValue = parts[parts.length - 1];
+    const num = parseInt(lastValue, 10);
+    return isNaN(num) ? null : num;
+  }).filter(x => x !== null);
+
+  if (ratings.length === 0) return null;
+
+  const sum = ratings.reduce((a, b) => a + b, 0);
+  const avg = sum / ratings.length;
+
+  return {
+    average: avg.toFixed(2),
+    count: ratings.length
+  };
+}
+
+
+
     async function fetchReviews() {
-      try {
-        const response = await fetch(sheetUrl);
-        const csvText = await response.text();
-        // Parse CSV (simple, no 3rd-party libs needed)
-        const rows = csvText.trim().split('\n').map(row =>
-          row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, ''))
-        );
-        const headers = rows[0];
-        const reviews = rows.slice(1).map(row => {
-          let obj = {};
-          headers.forEach((h, i) => obj[h] = row[i]);
-          return obj;
-        });
-        return reviews;
-      } catch (e) {
-        document.getElementById('carouselReview').textContent = "Couldn't load reviews!";
-        return [];
-      }
+  try {
+    const response = await fetch(sheetUrl);
+    const csvText = await response.text();
+
+    // --- Calculate basic average from raw CSV (last value in each row) ---
+    function calculateSimpleAverageFromCSV(csvText) {
+      const lines = csvText.trim().split('\n');
+      const ratingLines = lines.slice(1); // skip header
+      const ratings = ratingLines.map(line => {
+        const parts = line.trim().split(',');
+        const lastValue = parts[parts.length - 1];
+        const num = parseInt(lastValue, 10);
+        return isNaN(num) ? null : num;
+      }).filter(x => x !== null);
+
+      if (ratings.length === 0) return null;
+
+      const sum = ratings.reduce((a, b) => a + b, 0);
+      const avg = sum / ratings.length;
+
+      return {
+        average: avg.toFixed(2),
+        count: ratings.length
+      };
     }
+
+    const basicAvg = calculateSimpleAverageFromCSV(csvText);
+    if (basicAvg) {
+      document.getElementById('overallRating').textContent =
+        `Overall rating: ${basicAvg.average} / 5 — ${basicAvg.count} review${basicAvg.count === 1 ? '' : 's'}`;
+    } else {
+      document.getElementById('overallRating').textContent = "No ratings yet!";
+    }
+
+    // --- Parse CSV to structured objects for table + carousel ---
+    const rows = csvText.trim().split('\n').map(row =>
+      row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, ''))
+    );
+    const headers = rows[0];
+    const reviews = rows.slice(1).map(row => {
+      let obj = {};
+      headers.forEach((h, i) => obj[h] = row[i]);
+      return obj;
+    });
+    return reviews;
+
+  } catch (e) {
+    console.error("Failed to load or parse reviews:", e);
+    document.getElementById('carouselReview').textContent = "Couldn't load reviews!";
+    return [];
+  }
+}
+
 
     // Shuffle array (for random carousel)
     function shuffle(array) {
@@ -301,17 +368,21 @@
 
     // Render overall rating
     function renderOverallRating(reviews) {
-      const ratings = reviews
-        .map(r => parseInt(r['Rating'] || r['rating'] || r['Score'] || 0, 10))
-        .filter(x => !isNaN(x) && x > 0 && x <= 5);
-      if (ratings.length === 0) {
-        document.getElementById('overallRating').textContent = "No ratings yet!";
-        return;
-      }
-      const avg = ratings.reduce((a,b) => a+b, 0) / ratings.length;
-      document.getElementById('overallRating').textContent =
-        `Overall rating: ${avg.toFixed(2)} / 5 (${getStarRating(Math.round(avg))}) — ${ratings.length} review${ratings.length===1?"":"s"}`;
-    }
+  const ratingKey = Object.keys(reviews[0] || {}).find(k => k.toLowerCase().includes("rating"));
+  const ratings = reviews
+    .map(r => parseFloat(r[ratingKey]))
+    .filter(x => !isNaN(x) && x > 0 && x <= 5);
+
+  if (ratings.length === 0) {
+    document.getElementById('overallRating').textContent = "No ratings yet!";
+    return;
+  }
+
+  const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+  document.getElementById('overallRating').textContent =
+    `Overall rating: ${avg.toFixed(2)} / 5 `;
+}
+
 
     // Main: fetch and render all
     fetchReviews().then(reviews => {
