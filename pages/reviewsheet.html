@@ -199,7 +199,7 @@
       </div>
     </div>
     <div class="reviews-table" id="reviewsTableContainer">
-      <!-- The reviews table will be inserted here -->
+
     </div>
     <div class="button-row">
       <a href="../index.html" class="myButton">Home</a>
@@ -207,7 +207,7 @@
     </div>
   </div>
   <script>
-    // ---- THEME HANDLING (same as your other pages) ----
+ 
     const body = document.body;
     const themeClasses = [
       'light-mode','dark-mode','galaxy-theme','red-nebula-theme',
@@ -221,14 +221,10 @@
       body.classList.add('light-mode');
     }
 
-    // ---- GOOGLE SHEET FETCHING AND DISPLAY ----
-
-    // Replace with YOUR published Google Sheet "CSV" link!
-    // Open your sheet, File > Share > Publish to web > CSV format for "Form Responses 1"
-    // Should look like: https://docs.google.com/spreadsheets/d/e/xxx/pub?output=csv
+  
     const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcGDZjwMX72iGtW2NnTGFpor5lsfWzHtZIfdod0-nBOrb0dEpw_kt75orr6NHYBgd_QMv0om8tzSfg/pub?output=csv";
 
-    // If you want to test with your own, replace above URL after publishing!
+  
 
     function calculateSimpleAverageFromCSV(csvText) {
   const lines = csvText.trim().split('\n');
@@ -258,7 +254,7 @@
     const response = await fetch(sheetUrl);
     const csvText = await response.text();
 
-    // --- Calculate basic average from raw CSV (last value in each row) ---
+ 
     function calculateSimpleAverageFromCSV(csvText) {
       const lines = csvText.trim().split('\n');
       const ratingLines = lines.slice(1); // skip header
@@ -288,7 +284,7 @@
       document.getElementById('overallRating').textContent = "No ratings yet!";
     }
 
-    // --- Parse CSV to structured objects for table + carousel ---
+    
     const rows = csvText.trim().split('\n').map(row =>
       row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, ''))
     );
@@ -308,7 +304,7 @@
 }
 
 
-    // Shuffle array (for random carousel)
+    
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -322,7 +318,7 @@
       return '★'.repeat(n) + '☆'.repeat(5 - n);
     }
 
-    // Carousel logic
+
     let carouselReviews = [];
     let carouselIndex = 0;
     function showCarouselReview(idx) {
@@ -343,7 +339,7 @@
     document.getElementById('nextBtn').onclick = nextCarousel;
     document.getElementById('prevBtn').onclick = prevCarousel;
 
-    // Render reviews table
+ 
     function renderReviewsTable(allReviews) {
       const headers = Object.keys(allReviews[0] || {Name:"", Rating:"", Review:""});
       let html = `<table><thead><tr>`;
@@ -366,7 +362,7 @@
       document.getElementById('reviewsTableContainer').innerHTML = html;
     }
 
-    // Render overall rating
+
     function renderOverallRating(reviews) {
   const ratingKey = Object.keys(reviews[0] || {}).find(k => k.toLowerCase().includes("rating"));
   const ratings = reviews
@@ -384,19 +380,20 @@
 }
 
 
-    // Main: fetch and render all
+  
     fetchReviews().then(reviews => {
       if (!reviews.length) return;
-      // Carousel
+   
+      
       carouselReviews = shuffle(reviews.slice()).slice(0, 5);
       carouselIndex = 0;
       showCarouselReview(carouselIndex);
-      setInterval(nextCarousel, 8000); // auto-slide every 8 seconds
+      setInterval(nextCarousel, 8000);
 
-      // Table
+     
       renderReviewsTable(reviews);
 
-      // Overall
+  
       renderOverallRating(reviews);
     });
 
