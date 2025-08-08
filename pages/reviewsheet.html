@@ -6,25 +6,11 @@
   <link rel="stylesheet" href="../css/index.css">
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --background-color: #fff4fa;
-      --text-color: #222;
-      --button-bg-color: #ff6392;
-      --button-text-color: #fff;
-      --button-border-color: #ff98c2;
-      --link-color: #ff6392;
-    }
-    body {
-      font-family: 'Press Start 2P', monospace, Arial, sans-serif;
-      background: var(--background-color);
-      color: var(--text-color);
-      min-height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-    }
+
+body {
+  font-family: 'Press Start 2P', monospace, Arial, sans-serif;
+  color: var(--text-color);
+}
     .container {
       max-width: 900px;
       width: 98vw;
@@ -47,6 +33,7 @@
       position: relative;
       overflow: hidden;
       padding: 24px 16px 18px 16px;
+      display: hidden;
     }
     .carousel-review {
       text-align: center;
@@ -55,6 +42,7 @@
       transition: opacity .5s;
       color: #222;
       margin-bottom: 12px;
+      display: hidden;
     }
     .carousel-name {
       font-size: .99em;
@@ -62,6 +50,7 @@
       margin-top: 8px;
       margin-bottom: 3px;
       font-weight: bold;
+      display: hidden;
     }
     .carousel-rating {
       font-size: 1.25em;
@@ -69,6 +58,7 @@
       margin-top: 2px;
       margin-bottom: 8px;
       letter-spacing: 2px;
+      display: hidden;
     }
     .carousel-nav {
       position: absolute;
@@ -78,6 +68,7 @@
       justify-content: space-between;
       width: 100%;
       pointer-events: none;
+      display: hidden;
     }
     .carousel-btn {
       background: var(--button-bg-color);
@@ -91,6 +82,7 @@
       opacity: .85;
       transition: background .16s, transform .1s;
       display: flex; align-items: center; justify-content: center;
+      display: hidden;
     }
     .carousel-btn:hover { background: var(--link-color); transform: scale(1.11);}
     .overall-rating {
@@ -103,6 +95,7 @@
       padding: 12px 18px;
       border-radius: 8px;
       box-shadow: 0 2px 10px #ffbad650;
+      display: hidden;
     }
     .reviews-table {
       width: 100%;
@@ -173,6 +166,9 @@
       .overall-rating { font-size: 1em;}
       .button-row { gap: 10px; }
     }
+    #carouselContainer {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -189,7 +185,7 @@
       </div>
     </div>
     <div class="reviews-table" id="reviewsTableContainer">
-      <!-- The reviews table will be inserted here -->
+
     </div>
     <div class="button-row">
       <a href="../index.html" class="myButton">Home</a>
@@ -197,7 +193,7 @@
     </div>
   </div>
   <script>
-    // ---- THEME HANDLING (same as your other pages) ----
+ 
     const body = document.body;
     const themeClasses = [
       'light-mode','dark-mode','galaxy-theme','red-nebula-theme',
@@ -211,37 +207,90 @@
       body.classList.add('light-mode');
     }
 
-    // ---- GOOGLE SHEET FETCHING AND DISPLAY ----
-
-    // Replace with YOUR published Google Sheet "CSV" link!
-    // Open your sheet, File > Share > Publish to web > CSV format for "Form Responses 1"
-    // Should look like: https://docs.google.com/spreadsheets/d/e/xxx/pub?output=csv
+  
     const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcGDZjwMX72iGtW2NnTGFpor5lsfWzHtZIfdod0-nBOrb0dEpw_kt75orr6NHYBgd_QMv0om8tzSfg/pub?output=csv";
 
-    // If you want to test with your own, replace above URL after publishing!
+  
+
+    function calculateSimpleAverageFromCSV(csvText) {
+  const lines = csvText.trim().split('\n');
+  const ratingLines = lines.slice(1); // skip header
+  const ratings = ratingLines.map(line => {
+    const parts = line.trim().split(',');
+    const lastValue = parts[parts.length - 1];
+    const num = parseInt(lastValue, 10);
+    return isNaN(num) ? null : num;
+  }).filter(x => x !== null);
+
+  if (ratings.length === 0) return null;
+
+  const sum = ratings.reduce((a, b) => a + b, 0);
+  const avg = sum / ratings.length;
+
+  return {
+    average: avg.toFixed(2),
+    count: ratings.length
+  };
+}
+
+
 
     async function fetchReviews() {
-      try {
-        const response = await fetch(sheetUrl);
-        const csvText = await response.text();
-        // Parse CSV (simple, no 3rd-party libs needed)
-        const rows = csvText.trim().split('\n').map(row =>
-          row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, ''))
-        );
-        const headers = rows[0];
-        const reviews = rows.slice(1).map(row => {
-          let obj = {};
-          headers.forEach((h, i) => obj[h] = row[i]);
-          return obj;
-        });
-        return reviews;
-      } catch (e) {
-        document.getElementById('carouselReview').textContent = "Couldn't load reviews!";
-        return [];
-      }
+  try {
+    const response = await fetch(sheetUrl);
+    const csvText = await response.text();
+
+ 
+    function calculateSimpleAverageFromCSV(csvText) {
+      const lines = csvText.trim().split('\n');
+      const ratingLines = lines.slice(1); // skip header
+      const ratings = ratingLines.map(line => {
+        const parts = line.trim().split(',');
+        const lastValue = parts[parts.length - 1];
+        const num = parseInt(lastValue, 10);
+        return isNaN(num) ? null : num;
+      }).filter(x => x !== null);
+
+      if (ratings.length === 0) return null;
+
+      const sum = ratings.reduce((a, b) => a + b, 0);
+      const avg = sum / ratings.length;
+
+      return {
+        average: avg.toFixed(2),
+        count: ratings.length
+      };
     }
 
-    // Shuffle array (for random carousel)
+    const basicAvg = calculateSimpleAverageFromCSV(csvText);
+    if (basicAvg) {
+      document.getElementById('overallRating').textContent =
+        `Overall rating: ${basicAvg.average} / 5 — ${basicAvg.count} review${basicAvg.count === 1 ? '' : 's'}`;
+    } else {
+      document.getElementById('overallRating').textContent = "No ratings yet!";
+    }
+
+    
+    const rows = csvText.trim().split('\n').map(row =>
+      row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, ''))
+    );
+    const headers = rows[0];
+    const reviews = rows.slice(1).map(row => {
+      let obj = {};
+      headers.forEach((h, i) => obj[h] = row[i]);
+      return obj;
+    });
+    return reviews;
+
+  } catch (e) {
+    console.error("Failed to load or parse reviews:", e);
+    document.getElementById('carouselReview').textContent = "Couldn't load reviews!";
+    return [];
+  }
+}
+
+
+    
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -255,7 +304,7 @@
       return '★'.repeat(n) + '☆'.repeat(5 - n);
     }
 
-    // Carousel logic
+
     let carouselReviews = [];
     let carouselIndex = 0;
     function showCarouselReview(idx) {
@@ -276,7 +325,7 @@
     document.getElementById('nextBtn').onclick = nextCarousel;
     document.getElementById('prevBtn').onclick = prevCarousel;
 
-    // Render reviews table
+ 
     function renderReviewsTable(allReviews) {
       const headers = Object.keys(allReviews[0] || {Name:"", Rating:"", Review:""});
       let html = `<table><thead><tr>`;
@@ -299,33 +348,38 @@
       document.getElementById('reviewsTableContainer').innerHTML = html;
     }
 
-    // Render overall rating
-    function renderOverallRating(reviews) {
-      const ratings = reviews
-        .map(r => parseInt(r['Rating'] || r['rating'] || r['Score'] || 0, 10))
-        .filter(x => !isNaN(x) && x > 0 && x <= 5);
-      if (ratings.length === 0) {
-        document.getElementById('overallRating').textContent = "No ratings yet!";
-        return;
-      }
-      const avg = ratings.reduce((a,b) => a+b, 0) / ratings.length;
-      document.getElementById('overallRating').textContent =
-        `Overall rating: ${avg.toFixed(2)} / 5 (${getStarRating(Math.round(avg))}) — ${ratings.length} review${ratings.length===1?"":"s"}`;
-    }
 
-    // Main: fetch and render all
+    function renderOverallRating(reviews) {
+  const ratingKey = Object.keys(reviews[0] || {}).find(k => k.toLowerCase().includes("rating"));
+  const ratings = reviews
+    .map(r => parseFloat(r[ratingKey]))
+    .filter(x => !isNaN(x) && x > 0 && x <= 5);
+
+  if (ratings.length === 0) {
+    document.getElementById('overallRating').textContent = "No ratings yet!";
+    return;
+  }
+
+  const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+  document.getElementById('overallRating').textContent =
+    `Overall rating: ${avg.toFixed(2)} / 5 `;
+}
+
+
+  
     fetchReviews().then(reviews => {
       if (!reviews.length) return;
-      // Carousel
+   
+      
       carouselReviews = shuffle(reviews.slice()).slice(0, 5);
       carouselIndex = 0;
       showCarouselReview(carouselIndex);
-      setInterval(nextCarousel, 8000); // auto-slide every 8 seconds
+      setInterval(nextCarousel, 8000);
 
-      // Table
+     
       renderReviewsTable(reviews);
 
-      // Overall
+  
       renderOverallRating(reviews);
     });
 
