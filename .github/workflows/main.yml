@@ -7,27 +7,27 @@ jobs:
   discord-notify:
     runs-on: ubuntu-latest
     steps:
-      - name: get new commit 
+      - name: Get last commit info
         id: commit
         run: |
           echo "COMMIT_TITLE=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
           echo "COMMIT_DESC=$(git log -1 --pretty=%b)" >> $GITHUB_OUTPUT
 
-      - name: send commit to webhook
+      - name: Send Discord webhook embed with role ping
         env:
           WEBHOOK_URL: "https://discord.com/api/webhooks/1403184867197321256/drfWq3uDUCFIDnF8BfOqGwqeP95LSW05QHy3zdGnSmTn06dA4zyNCykQ2ZuRU2l4F9r-"
-          ROLE_ID: '1402958641883123733' 
+          ROLE_ID: "1402958641883123733"  # replace with actual role ID
           COMMIT_TITLE: ${{ steps.commit.outputs.COMMIT_TITLE }}
-          COMMIT_DESC: ${{ steps.commit.outputs.COMMIT_DESC }} 
+          COMMIT_DESC: ${{ steps.commit.outputs.COMMIT_DESC }}
         run: |
           curl -H "Content-Type: application/json" -X POST -d @- $WEBHOOK_URL <<EOF
           {
-            "content": "<@&$ROLE_ID> - new commit to the github repo!! update will be live in 30-60 seconds",
+            "content": "<@&$ROLE_ID> - new github commit! update will be live soon",
             "embeds": [
               {
                 "title": "$COMMIT_TITLE",
                 "description": "$COMMIT_DESC",
-                "color": 8034024,
+                "color": 3447003,
                 "footer": {
                   "text": "https://marzlib.xyz"
                 }
