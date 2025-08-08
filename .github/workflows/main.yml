@@ -16,22 +16,27 @@ jobs:
       - name: Send Discord webhook embed with role ping
         env:
           WEBHOOK_URL: "https://discord.com/api/webhooks/1403184867197321256/drfWq3uDUCFIDnF8BfOqGwqeP95LSW05QHy3zdGnSmTn06dA4zyNCykQ2ZuRU2l4F9r-"
-          ROLE_ID: "1402958641883123733"  # replace with actual role ID
+          ROLE_ID: "1402958641883123733"
           COMMIT_TITLE: ${{ steps.commit.outputs.COMMIT_TITLE }}
           COMMIT_DESC: ${{ steps.commit.outputs.COMMIT_DESC }}
         run: |
-          curl -H "Content-Type: application/json" -X POST -d @- $WEBHOOK_URL <<EOF
-          {
-            "content": "<@&$ROLE_ID> - new github commit! update will be live soon",
-            "embeds": [
-              {
-                "title": "$COMMIT_TITLE",
-                "description": "$COMMIT_DESC",
-                "color": 3447003,
-                "footer": {
-                  "text": "https://marzlib.xyz"
+          # Create JSON payload with embedded variables carefully escaped
+          payload=$(jq -n \
+            --arg content "<@&$ROLE_ID> - new github commit! update will be live soon" \
+            --arg title "$COMMIT_TITLE" \
+            --arg description "$COMMIT_DESC" \
+            --arg footer "https://marzlib.xyz" \
+            '{
+              content: $content,
+              embeds: [
+                {
+                  title: $title,
+                  description: $description,
+                  color: 3447003,
+                  footer: { text: $footer }
                 }
-              }
-            ]
-          }
-          EOF
+              ]
+            }')
+
+          # Send the webhook with curl
+          curl -H "Content-Type: application/json" -X POST -d "$payload" "$WEBHOOK_URL"
