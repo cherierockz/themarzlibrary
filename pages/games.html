@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Marz's Games</title>
+  <title>Marz's Gаmеs</title>
   <link rel="stylesheet" href="../css/games.css">
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
@@ -10,12 +10,12 @@
   </style>
 </head>
 <body>
-  <h1>Marz's Games</h1>
+  <h1>Marz's Gаmеs</h1>
 
-  <input type="text" id="gameSearch" placeholder="Search for a game...">
+  <input type="text" id="gameSearch" placeholder="Search for a gаmе...">
   <p class="game-counter" id="gameCount">0 games hosted</p>
 
-  <button class="myButton" id="randomGameBtn">Random Game</button>
+  <button class="myButton" id="randomGameBtn">Random Gаmе</button>
   <br>
 
   <div class="game-grid" id="gameList"></div>
@@ -27,10 +27,12 @@
     const games = [
       { url: "/filesgx/osu!.html", img: "/images/gx/osu.png", title: "Osu" },
       { url: "/filesgx/ddlc.html", img: "/images/gx/ddlc.jpg", title: "Doki Doki Literature Club" },
-      { url: "/filesgx/OMORI.html", img: "/images/gx/OMORI.png", title: "Omori" },
+      { url: "/filesgx/omoriport/index.html", img: "/images/gx/OMORI.png", title: "Omori" },
       { url: "/filesgx/classof09web/index.html", img: "/images/gx/co09.png", title: "Class of '09" },
+      { url: "/filesgx/classof09-thereup/index.html", img: "/images/gx/reupp.png", title: "Class of '09: The Re-Up" },
+      { url: "/filesgx/classof09flip/index.html", img: "/images/gx/flipside.png", title: "Class of '09: The Flipside" },
       { url: "/filesgx/undertale.html", img: "/images/gx/undertale.png", title: "Undertale" },
-      { url: "/filesgx/Deltarune.html", img: "/images/gx/deltarune.png", title: "Deltarune" },
+      { url: "/filesgx/deltarune/index.html", img: "/images/gx/deltarune.png", title: "Deltarune" },
       { url: "/filesgx/snake-remake-html-main/natlol/index.html", img: "/images/gx/ekkeLl.png", title: "Snake" },
       { url: "/filesgx/A Bite at Freddy's.html", img: "/images/gx/freddy.png", title: "A Bite at Freddy's" },
       { url: "/filesgx/Kindergarten.html", img: "/images/gx/kindergarten.png", title: "Kindergarten" } ,
@@ -75,11 +77,27 @@
       { url: "/filesgx/Bloons TD 3.html", img: "/images/gx/bloon3.png", title: "Bloons TD 3" },
       { url: "/filesgx/Bloons TD 4.html", img: "/images/gx/bloon4.png", title: "Bloons TD 4" },
       { url: "/filesgx/Bloons TD 5.html", img: "/images/gx/bloon5.png", title: "Bloons TD 5" },
-      { url: "/filesgx/Backrooms.html", img: "/images/gx/br.png", title: "Backrooms" },
+      { url: "/filesgx/backrooms/index.html", img: "/images/gx/br.png", title: "Backrooms" },
       { url: "/filesgx/Amanda the Adventurer.html", img: "/images/gx/ata.png", title: "Amanda the Adventurer" },
       { url: "/filesgx/Half Life.html", img: "/images/gx/hl.png", title: "Half Life" } ,
       { url: "/filesgx/Bad Parenting 1.html", img: "/images/gx/bp1.png", title: "Bad Parenting 1" } ,
       { url: "/filesgx/Binding of Issac_ Wrath of the Lamb.html", img: "/images/gx/biwotl.png", title: "Binding Of Issac: Wrath of the Lamb" } ,
+      { url: "/filesgx/animalcrossings.html", img: "/images/gx/animalcrossing.png", title: "Animal Crossing: Wild World" } ,
+      { url: "/filesgx/earthbound.html", img: "/images/gx/earthbound.png", title: "Earthbound" } ,
+      { url: "/filesgx/hotline-miami/index.html", img: "/images/gx/hm.png", title: "Hotline Miami" } ,
+      { url: "/filesgx/aceattorney.html", img: "/images/gx/phoenix_wright_ace_attorney.png", title: "Phoenix Wright: Ace Attorney" } ,
+      { url: "/filesgx/papasbakeria/index.html", img: "/images/gx/papasbakeria.png", title: "Papa's Bakeria" } ,
+      { url: "/filesgx/papasburgeria/index.html", img: "/images/gx/papasburgeria.jpeg", title: "Papa's Burgeria" } ,
+      { url: "/filesgx/papascheeseria/index.html", img: "/images/gx/papascheeseria.png", title: "Papa's Cheeseria" } ,
+      { url: "/filesgx/papaspastaria/index.html", img: "/images/gx/papaspastaria.png", title: "Papa's Pastaria" } ,
+      { url: "/filesgx/papasdonuteria/index.html", img: "/images/gx/papasdonuteria.png", title: "Papa's Donuteria" } ,
+      { url: "/filesgx/papasfreezeria/index.html", img: "/images/gx/papasfreezeria.jpeg", title: "Papa's Freezeria" } ,
+      { url: "/filesgx/papaspizzeria/index.html", img: "/images/gx/papaspizzaria.jpeg", title: "Papa's Pizzaria" } ,
+      { url: "/filesgx/papaspancakeria/index.html", img: "/images/gx/papaspancakeria.png", title: "Papa's Pancakeria" } ,
+      { url: "/filesgx/papassushiria/index.html", img: "/images/gx/papassushiria.png", title: "Papa's Sushiria" } ,
+      { url: "/filesgx/papasscooperia/index.html", img: "/images/gx/papasscooperia.png", title: "Papa's Scooperia" } ,
+      { url: "/filesgx/papastacomia/index.html", img: "/images/gx/papastacomia.png", title: "Papa's Tacomia" } ,
+      { url: "/filesgx/papaswingeria/index.html", img: "/images/gx/papaswingeria.png", title: "Papa's Wingeria" } ,
     ]; 
    
 
@@ -131,19 +149,23 @@
 
 
     function animateCounter(count) {
-      const counterElement = document.getElementById("gameCount");
-      let current = 0;
-      const counter = setInterval(() => {
-        if (current < count) {
-          current++;
-          const label = current === 1 ? "game hosted" : "games hosted";
-          counterElement.textContent = `${current} ${label}`;
-        } else {
-          clearInterval(counter);
-        }
-      }, 40);
-      if (count === 0) counterElement.textContent = "0 games hosted";
+  const counterElement = document.getElementById("gameCount");
+
+  let current = 0;
+  const duration = 500;
+  const steps = Math.ceil(duration / 16);
+  const increment = Math.ceil(count / steps);
+
+  const counter = setInterval(() => {
+    current += increment;
+    if (current >= count) {
+      current = count;
+      clearInterval(counter);
     }
+    counterElement.textContent = `${current} gаmеs hosted`;
+  }, 16);
+}
+
 
 
     window.addEventListener("DOMContentLoaded", () => {
